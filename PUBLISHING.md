@@ -12,9 +12,12 @@ checklist is the release gate.
       accounts have `auth-and-writes` 2FA mode; publishing requires either a
       TOTP code from an authenticator app or a **granular access token with
       "Bypass 2FA"** enabled. Enable 2FA on npmjs.com before the first publish.
-- [ ] For CI publishing, add the granular token (publish permission for
-      `dsh-sidebar-notes`, bypass 2FA) as the `NPM_TOKEN` repository secret;
-      `.github/workflows/release.yml` publishes on a `v*` tag.
+- [x] Trusted publishing is configured for GitHub Actions (token-free OIDC):
+      `npm trust github dsh-sidebar-notes --file release.yml \
+        --repo ImNotDerk/dsh-sidebar-notes --allow-publish`
+      (config id `b1f71da7-e990-4ff1-9148-2524c74a83c9`, permissions
+      `publish, stage publish`). `.github/workflows/release.yml` publishes on a
+      `v*` tag, with no `NPM_TOKEN` secret required.
 - [ ] Confirm the name is still free: `npm view dsh-sidebar-notes version`
       should report `E404`.
 - [ ] Create the GitHub repository, add it as `origin`, push `main`.
@@ -35,12 +38,23 @@ checklist is the release gate.
       `user_notes_*` tools in a new session.
 - [ ] Verify the token-only design under at least one alternate theme
       (Settings → Themes) and one browser reload with a different palette.
-- [ ] `git status` is clean; commit, tag `vX.Y.Z`, push.
-- [ ] `npm publish --access public`.
+- [ ] `git status` is clean; commit, tag `vX.Y.Z`, push. The tag triggers
+      `.github/workflows/release.yml`, which publishes through trusted
+      publishing (OIDC) with provenance.
+- [ ] Manual fallback (first publish or setup changes): run
+      `npm publish --access public` locally and approve the browser 2FA prompt
+      with the account security key.
 - [ ] Post-publish: install from npm in a clean profile with
       `plugin_manager install_bundle target=dsh-sidebar-notes` and repeat the
       smoke checks.
 - [ ] Update the README compatibility line if the tested DSH version changed.
+
+## npm placeholders
+
+The first publish of this name created npm's permanent `0.0.0-stage`
+placeholder ("Temporary package placeholder for staged publishing"). It is the
+name reservation that makes the package addressable; do not unpublish or delete
+it. `latest` points at the real release (`0.1.0` at the time of writing).
 
 ## Rollback
 

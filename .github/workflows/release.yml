@@ -17,8 +17,9 @@ jobs:
         with:
           node-version: 24
           registry-url: 'https://registry.npmjs.org'
+      - run: npm install -g npm@latest
       - run: npm test
-      - name: Publish to npm
-        run: npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Trusted publishing: OIDC, no long-lived npm token. Configured with
+      # `npm trust github dsh-sidebar-notes --file release.yml \
+      #   --repo ImNotDerk/dsh-sidebar-notes --allow-publish`.
+      - run: npm publish --access public --provenance
