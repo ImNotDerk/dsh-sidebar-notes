@@ -1,0 +1,65 @@
+{
+  "name": "dsh-sidebar-notes",
+  "version": "0.1.0",
+  "description": "A todo list and sticky-note board for the DeepSeek Harness Web UI, with agent read/write tools.",
+  "type": "module",
+  "license": "MIT",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./cordis.patch.yml": "./cordis.patch.yml"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "check": "node --check index.js && node --check client.js && node scripts/check.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "test": "npm run check && npm run smoke",
+    "pack:dry": "npm pack --dry-run"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-sidebar"
+      ]
+    }
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "cordis-plugin",
+    "todos",
+    "notes",
+    "sticky-notes",
+    "web-ui"
+  ],
+  "author": "Derk (https://github.com/ImNotDerk)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ImNotDerk/dsh-sidebar-notes.git"
+  },
+  "homepage": "https://github.com/ImNotDerk/dsh-sidebar-notes#readme",
+  "bugs": {
+    "url": "https://github.com/ImNotDerk/dsh-sidebar-notes/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

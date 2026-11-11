@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Sidebar notes">
+  <rect width="64" height="64" rx="14" fill="#2f6feb"/>
+  <path d="M20 14h24a4 4 0 0 1 4 4v22l-10 10H20a4 4 0 0 1-4-4V18a4 4 0 0 1 4-4z" fill="#fdfdf7"/>
+  <path d="M38 50v-6a4 4 0 0 1 4-4h6z" fill="#cdd8ec"/>
+  <path d="M24 26l4 4 8-8" fill="none" stroke="#2f9e63" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M24 40h12" fill="none" stroke="#9aa6bd" stroke-width="4" stroke-linecap="round"/>
+</svg>
