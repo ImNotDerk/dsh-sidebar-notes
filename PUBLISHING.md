@@ -8,7 +8,13 @@ checklist is the release gate.
 
 ## One-time setup
 
-- [ ] Confirm the npm account and scope: `npm whoami` (expected `ImNotDerk`).
+- [ ] Confirm the npm account: `npm whoami` (expected `imnotderk`). New npm
+      accounts have `auth-and-writes` 2FA mode; publishing requires either a
+      TOTP code from an authenticator app or a **granular access token with
+      "Bypass 2FA"** enabled. Enable 2FA on npmjs.com before the first publish.
+- [ ] For CI publishing, add the granular token (publish permission for
+      `dsh-sidebar-notes`, bypass 2FA) as the `NPM_TOKEN` repository secret;
+      `.github/workflows/release.yml` publishes on a `v*` tag.
 - [ ] Confirm the name is still free: `npm view dsh-sidebar-notes version`
       should report `E404`.
 - [ ] Create the GitHub repository, add it as `origin`, push `main`.
