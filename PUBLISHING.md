@@ -49,6 +49,27 @@ checklist is the release gate.
       smoke checks.
 - [ ] Update the README compatibility line if the tested DSH version changed.
 
+## Marketplace listing (dshmarket / DSH Discover)
+
+dshmarket and the DSH Discover tab read the awesome-dsh-plugin catalog. The
+entry is prepared on the fork `ImNotDerk/awesome-dsh-plugin`, branch
+`add-dsh-sidebar-notes`, as `data/plugins/ImNotDerk__dsh-sidebar-notes.yml`.
+
+The catalog requires the plugin repository to be at least one day old
+(`dsh-sidebar-notes` was created 2026-11-11T03:20Z), so open the PR after
+**2026-11-12T03:20Z**:
+
+```sh
+gh pr create --repo awesome-dsh-plugin/awesome-dsh-plugin \
+  --head ImNotDerk:add-dsh-sidebar-notes --base main \
+  --title "Add ImNotDerk/dsh-sidebar-notes" \
+  --body "npm: https://www.npmjs.com/package/dsh-sidebar-notes — a todo list and sticky-note board, each on its own page, plus agent read/write tools for both."
+```
+
+After the PR merges, the site, dshmarket and DSH's Discover tab pick the entry
+up automatically (usually within a day). Keep the entry in sync on version
+bumps only when the URL or description changes.
+
 ## npm placeholders
 
 The first publish of this name created npm's permanent `0.0.0-stage`
