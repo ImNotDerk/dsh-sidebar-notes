@@ -1025,6 +1025,7 @@ window.__ModuleLoader__.load({
       const fileRef = React.useRef(null)
       const deleteTimer = React.useRef(undefined)
       const [offset, setOffset] = React.useState(null)
+      const [pending, setPending] = React.useState(null)
       const [dragging, setDragging] = React.useState(false)
       const [renaming, setRenaming] = React.useState(false)
       const [titleDraft, setTitleDraft] = React.useState(noteTitle)
@@ -1047,6 +1048,26 @@ window.__ModuleLoader__.load({
         if (deleteTimer.current !== undefined) window.clearTimeout(deleteTimer.current)
         if (textTimer.current !== undefined) window.clearTimeout(textTimer.current)
       }, [])
+
+      // A dropped note keeps rendering at its new cell until the Host returns
+      // the stored position; otherwise the offset reset would snap it back to
+      // the old cell and the adopt would animate it forward again (a bounce).
+      React.useEffect(() => {
+        if (pending === null) return
+        if (noteX === pending.x && noteY === pending.y) setPending(null)
+      }, [noteX, noteY, pending])
+
+      React.useEffect(() => {
+        if (pending === null || props.saveError === '') return undefined
+        setPending(null)
+        return undefined
+      }, [props.saveError, pending])
+
+      React.useEffect(() => {
+        if (pending === null) return undefined
+        const timer = window.setTimeout(() => { setPending(null) }, 5000)
+        return () => { window.clearTimeout(timer) }
+      }, [pending])
 
       // The stored text catching up with the draft ends the local edit, so a
       // round trip never scrolls the caret or shows the older body back.
@@ -1103,8 +1124,8 @@ window.__ModuleLoader__.load({
         event.preventDefault()
         const startX = event.clientX
         const startY = event.clientY
-        const originX = noteX
-        const originY = noteY
+        const originX = pending === null ? noteX : pending.x
+        const originY = pending === null ? noteY : pending.y
         setDragging(true)
         const move = (moveEvent) => {
           setOffset({ dx: moveEvent.clientX - startX, dy: moveEvent.clientY - startY })
@@ -1122,10 +1143,10 @@ window.__ModuleLoader__.load({
           }
           const maxX = Math.max(0, board.clientWidth - NOTE_WIDTH - 8)
           const maxY = Math.max(0, board.clientHeight - 60)
-          actions.patchNote(note.id, {
-            x: Math.round(clamp(snapToGrid(originX + dx), 0, maxX)),
-            y: Math.round(clamp(snapToGrid(originY + dy), 0, maxY)),
-          })
+          const x = Math.round(clamp(snapToGrid(originX + dx), 0, maxX))
+          const y = Math.round(clamp(snapToGrid(originY + dy), 0, maxY))
+          setPending({ x, y })
+          actions.patchNote(note.id, { x, y })
         }
         window.addEventListener('pointermove', move)
         window.addEventListener('pointerup', up)
@@ -1157,8 +1178,8 @@ window.__ModuleLoader__.load({
           '--dswp-note-hue': skin.hue,
           '--dswp-note-tint': skin.tint,
           '--dswp-note-bar-tint': skin.bar,
-          left: `${noteX + (offset?.dx ?? 0)}px`,
-          top: `${noteY + (offset?.dy ?? 0)}px`,
+          left: `${(pending === null ? noteX : pending.x) + (offset?.dx ?? 0)}px`,
+          top: `${(pending === null ? noteY : pending.y) + (offset?.dy ?? 0)}px`,
           zIndex: dragging ? 8 : undefined,
         },
         'data-collapsed': note.collapsed ? 'true' : undefined,
@@ -1390,6 +1411,7 @@ window.__ModuleLoader__.load({
                       t,
                       actions: props,
                       boardRef,
+                      saveError: state.saveError,
                       focus: note.id === focusId,
                     })))),
       })

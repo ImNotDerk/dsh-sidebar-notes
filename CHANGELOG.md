@@ -5,6 +5,18 @@ All notable changes to this package are documented here. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Until `1.0.0`, the
 DeepSeek Harness plugin APIs this bundle targets may still change.
 
+## [0.1.1] — 2026-11-11
+
+### Fixed
+
+- Dragging a sticky note no longer bounces: the note used to snap back to its
+  old cell when the pointer was released and only then animate to the dropped
+  cell after the Host acknowledged the write. The card now keeps the dropped
+  position until the stored document catches up (or the save fails), so a drag
+  lands once.
+- A rejected position write settles back to the stored cell immediately instead
+  of waiting for the fallback timeout.
+
 ## [0.1.0] — 2026-11-11
 
 Initial public release.

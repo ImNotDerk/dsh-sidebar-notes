@@ -1,6 +1,6 @@
 {
   "name": "dsh-sidebar-notes",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A todo list and sticky-note board for the DeepSeek Harness Web UI, with agent read/write tools.",
   "type": "module",
   "license": "MIT",
